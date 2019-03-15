@@ -1,10 +1,14 @@
 import numpy as np
 from Generator import Generator
-from sklearn import datasets
+import pandas as pd
+import argparse
+
 
 def main():
-    data = datasets.load_breast_cancer(return_X_y=False)['data']
+    data = np.array(pd.read_table("moses_cleaned.tab", header=None, names=['id', 'smiles'])['smiles']).reshape(-1,1)
     generator = Generator(data).generator
+    for i in generator():
+        print(i)
 
 
 
