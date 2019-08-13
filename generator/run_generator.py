@@ -3,14 +3,27 @@ from Generator import Generator
 import pandas as pd
 import argparse
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--file_location", type=str)
+    parser.add_argument("--n", type=int)
+    parser.add_argument("--data", type=str)
 
-def main():
-    data = np.array(pd.read_table("moses_cleaned.tab", header=None, names=['id', 'smiles'])['smiles']).reshape(-1,1)
+    return parser.parse_args()
+
+def main(args):
+    tb = pd.read_csv(args.data, header=None, sep='\t', names=['smiles'])['smiles']
+
+    data = np.array(tb).reshape(-1,1)
     generator = Generator(data).generator
-    for i in generator():
-        print(i)
+
+    with open(args.file_location, 'w') as f:
+        for i in generator():
+            f.write(i)
+            f.write('\n')
 
 
 
 if __name__ == '__main__':
-    main()
+    args = get_args()
+    main(args)
