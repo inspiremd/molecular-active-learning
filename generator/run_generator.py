@@ -5,14 +5,15 @@ import argparse
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--file_location", type=str)
-    parser.add_argument("--n", type=int)
-    parser.add_argument("--data", type=str)
+    parser.add_argument("-o", type=str)
+    parser.add_argument('-i', action='store_true')
+    parser.add_argument("-n", type=int)
+    parser.add_argument("-d", type=str)
 
     return parser.parse_args()
 
 def main(args):
-    tb = pd.read_csv(args.data, header=None, sep='\t', names=['smiles'])['smiles']
+    tb = pd.read_csv(args.d, header=None, sep='\t', names=['smiles'])['smiles']
 
     data = np.array(tb).reshape(-1,1)
     generator = Generator(data).generator
@@ -26,4 +27,8 @@ def main(args):
 
 if __name__ == '__main__':
     args = get_args()
-    main(args)
+    if args.i:
+        main(args)
+    else:
+        print("Error: uncertainty sampling not supported yet. Can only run -i")
+        exit()

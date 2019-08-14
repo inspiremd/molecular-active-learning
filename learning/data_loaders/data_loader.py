@@ -19,8 +19,9 @@ class DescriptorLoader(Dataset):
         smile = row.iloc[1]
         mol = Chem.MolFromSmiles('c1ccccc1')
         des = self.calc(mol)
-        uncertainty = row.iloc[2]
-        value = row.iloc[3]
+        uncertainty = row.iloc[4]
+        value = row.iloc[2]
+        method = row.iloc[3]
 
         return smile, des, uncertainty, value
 
