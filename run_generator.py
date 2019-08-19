@@ -5,10 +5,11 @@ import argparse
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", type=str)
+    parser.add_argument("-o", type=str, help='output path', required=True)
     parser.add_argument('-i', action='store_true')
-    parser.add_argument("-n", type=int)
-    parser.add_argument("-d", type=str)
+    parser.add_argument("-n", type=int, help='number of samples to provide', required=True)
+    parser.add_argument("-d", type=str, help='path to database csv or file', required=False)
+    parser.add_argument("-s", type=str, help="learner file directory", required=True)
 
     return parser.parse_args()
 
@@ -24,9 +25,13 @@ def main(args):
     generator = Generator.Generator(data).generator
 
     with open(args.o + "run.txt", 'w') as f:
+        count = 0
         for i in generator():
+            if count >= args.n:
+                break
             f.write(str(i[0]))
             f.write('\n')
+            count += 1
 
 
 

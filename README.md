@@ -3,10 +3,9 @@ Active learning, generator, and ML lives here.
 
 
 # Generator
-The generator is run initally with -i flag to indicate no uncertainty sampling. The generator uses the -o directory to store 
-files to maintain state across invocations.
+The generator should be called at the start of every MD pipline to provide a ligand. 
 ```bash
-python run_generator.py -i -n tasks -o tmp/generator_store/ -d ../data.csv
+python run_generator.py -i -s /tmp/ -n 1 -o <unique place for pipeline to find output>
 ```
 
 After some learning stage
@@ -15,5 +14,5 @@ After some learning stage
 
 For testing one can run:
 ```bash
- python run_learner.py -f -o tmp/learner_store/ --data_path tmp/fake_data/
+ python run_learner.py -f -o tmp/ --data_path tmp/fake_data/
 ```
