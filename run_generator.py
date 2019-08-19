@@ -1,5 +1,5 @@
 import numpy as np
-from Generator import Generator
+from generator import Generator
 import pandas as pd
 import argparse
 
@@ -13,14 +13,19 @@ def get_args():
     return parser.parse_args()
 
 def main(args):
-    tb = pd.read_csv(args.d, header=None, sep='\t', names=['smiles'])['smiles']
+    if args.d is not None:
+        tb = pd.read_csv(args.d, header=None, sep='\t', names=['smiles'])['smiles']
+    else:
+        from sklearn.datasets import make_regression
+        X,_ = make_regression(n_samples=100000, n_features=2, n_targets=1)
+        tb = pd.DataFrame(X)
 
     data = np.array(tb).reshape(-1,1)
-    generator = Generator(data).generator
+    generator = Generator.Generator(data).generator
 
-    with open(args.file_location, 'w') as f:
+    with open(args.o + "run.txt", 'w') as f:
         for i in generator():
-            f.write(i)
+            f.write(str(i[0]))
             f.write('\n')
 
 

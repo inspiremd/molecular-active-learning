@@ -17,16 +17,17 @@ class TwoLayerNet(nn.Module):
 
 
 class Trainer():
-    def __init__(self, model, optimizer, loss):
-        self.device = torch.device('cuda:0' if torch.cuda.is_avaliable() else 'cpu')
+    def __init__(self, model, optimizer, loss, config_dir):
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model = model
         self.optimizer = optimizer
         self.loss = loss
+        self.dir = config_dir
 
 
     @classmethod
-    def load_trainer(self, model, pt_file):
-        device = torch.device('cuda:0' if torch.cuda.is_avaliable() else 'cpu')
+    def load_trainer(self, model, pt_file, config_dir):
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         pt = torch.load(pt_file)
         model = model(pt['feats']).to(device)
@@ -35,27 +36,30 @@ class Trainer():
         optimizer.load_state_dict(pt['optimizer_state'])
         loss = pt['loss_f']
 
-        return Trainer(model, optimizer, loss)
+
+        return Trainer(model, optimizer, loss, config_dir)
 
     @classmethod
-    def create_new_trainer(self, model, feats, loss):
-        device = torch.device('cuda:0' if torch.cuda.is_avaliable() else 'cpu')
+    def create_new_trainer(self, model, feats, loss, config_dir):
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         model = model(feats).to(device)
         optimizer = optim.Adam(model.parameters(), lr=1e-3)
         loss = loss(reduce='mean')
 
-        return Trainer(model, optimizer, loss)
+        return Trainer(model, optimizer, loss, config_dir)
 
     def train_epoch(self, data_loader):
-            for i, x, y in enumerate(data_loader):
-                x = x.to(self.device)
-                y = y.to(self.device)
+            for i, (x,y) in enumerate(data_loader):
+
+                x = x.float().to(self.device)
+                y = y.float().to(self.device)
 
                 y_pred = self.model(x)
                 loss = self.loss(y,y_pred)
                 loss.backward()
                 self.optimizer.step()
 
-    def train(self, data_loader, epochs=1):
+    def train(self, data_loader, epochs=10):
         for i in range(epochs):
             self.train_epoch(data_loader)
+        torch.save(self.model, self.dir + "checkpoint.pt")
