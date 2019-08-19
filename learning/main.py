@@ -1,5 +1,5 @@
 import argparse
-import learning.models as models
+import models as models
 import torch.nn as nn
 
 
@@ -7,7 +7,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', action='store_true')
     parser.add_argument('-o', type=str, required=True)
-    parser.add_argument('--data_path', type=int, required=True)
+    parser.add_argument('--data_path', type=str, required=True)
     return parser.parse_args()
 
 def get_data_loader():
