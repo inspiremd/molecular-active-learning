@@ -7,6 +7,7 @@ import torch.optim as optim
 class TwoLayerNet(nn.Module):
     def __init__(self, feat_size):
         super(TwoLayerNet, self).__init__()
+        self.feat_size = feat_size
         self.ln1 = nn.Linear(feat_size, 100)
         self.mu = nn.Linear(100, 1)
         self.sigma = nn.Linear(100, 1)
@@ -14,7 +15,7 @@ class TwoLayerNet(nn.Module):
 
     def forward(self, x):
         x = self.relu(self.ln1(x))
-        return self.mu(x), self.sigma(x)
+        return self.mu(x)
 
 
 class Trainer():
