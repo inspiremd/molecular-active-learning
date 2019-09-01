@@ -32,9 +32,11 @@ def get_data_loader():
 
 def main(args):
     if args.mpi:
-        comm = MPI.COMM_WORLD
-        size = comm.Get_size()
-        rank = comm.Get_rank()
+        # comm = MPI.COMM_WORLD
+        # size = comm.Get_size()
+        # rank = comm.Get_rank()
+        print("not implemented.")
+        exit(0)
     else:
         print("Single-user non-MPI mode.")
         trainer = models.Trainer.create_new_trainer(models.TwoLayerNet, 10, nn.MSELoss, args.o)
