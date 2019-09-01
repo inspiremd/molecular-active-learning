@@ -1,7 +1,10 @@
-import numpy as np
-from generator import Generator
-import pandas as pd
 import argparse
+
+import numpy as np
+import pandas as pd
+
+from generator import Generator
+
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -13,15 +16,16 @@ def get_args():
 
     return parser.parse_args()
 
+
 def main(args):
     if args.d is not None:
         tb = pd.read_csv(args.d, header=None, sep='\t', names=['smiles'])['smiles']
     else:
         from sklearn.datasets import make_regression
-        X,_ = make_regression(n_samples=100000, n_features=2, n_targets=1)
+        X, _ = make_regression(n_samples=100000, n_features=2, n_targets=1)
         tb = pd.DataFrame(X)
 
-    data = np.array(tb).reshape(-1,1)
+    data = np.array(tb).reshape(-1, 1)
     generator = Generator.Generator(data).generator
 
     with open(args.o + "run.txt", 'w') as f:
@@ -32,7 +36,6 @@ def main(args):
             f.write(str(i[0]))
             f.write('\n')
             count += 1
-
 
 
 if __name__ == '__main__':

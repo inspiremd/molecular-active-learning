@@ -15,7 +15,6 @@ class TwoLayerNet(nn.Module):
         return self.ln2(self.relu(self.ln1(x)))
 
 
-
 class Trainer():
     def __init__(self, model, optimizer, loss, config_dir):
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -23,7 +22,6 @@ class Trainer():
         self.optimizer = optimizer
         self.loss = loss
         self.dir = config_dir
-
 
     @classmethod
     def load_trainer(self, model, pt_file, config_dir):
@@ -35,7 +33,6 @@ class Trainer():
         optimizer = optim.Adam(model.parameters(), lr=1e-3)
         optimizer.load_state_dict(pt['optimizer_state'])
         loss = pt['loss_f']
-
 
         return Trainer(model, optimizer, loss, config_dir)
 
@@ -49,15 +46,14 @@ class Trainer():
         return Trainer(model, optimizer, loss, config_dir)
 
     def train_epoch(self, data_loader):
-            for i, (x,y) in enumerate(data_loader):
+        for i, (x, y) in enumerate(data_loader):
+            x = x.float().to(self.device)
+            y = y.float().to(self.device)
 
-                x = x.float().to(self.device)
-                y = y.float().to(self.device)
-
-                y_pred = self.model(x)
-                loss = self.loss(y,y_pred)
-                loss.backward()
-                self.optimizer.step()
+            y_pred = self.model(x)
+            loss = self.loss(y, y_pred)
+            loss.backward()
+            self.optimizer.step()
 
     def train(self, data_loader, epochs=10):
         for i in range(epochs):

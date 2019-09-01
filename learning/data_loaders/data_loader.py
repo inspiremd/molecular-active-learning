@@ -1,15 +1,15 @@
 import pandas as pd
-from torch.utils.data import Dataset, DataLoader
-
 from rdkit import Chem
-from mordred import Calculator, descriptors
+from torch.utils.data import Dataset
+
+from learning.featurizer.DescriptorFeatureizer import DescriptorFeaturizer
 
 
-class DescriptorLoader(Dataset):
+class GeneralMolDataset(Dataset):
 
-    def __init__(self, csv_file):
+    def __init__(self, csv_file, mol_featuerizer=DescriptorFeaturizer):
         self.data = pd.read_csv(csv_file)
-        self.calc = Calculator(descriptors, ignore_3D=False)
+        self.calc = mol_featuerizer(ignore_3D=False)
 
     def __len__(self):
         return self.data.shape[0]
@@ -24,7 +24,3 @@ class DescriptorLoader(Dataset):
         method = row.iloc[3]
 
         return smile, des, uncertainty, value
-
-
-if __name__ == '__main__':
-    dataset = DescriptorLoader('~/out_samples.smi')

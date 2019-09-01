@@ -1,8 +1,10 @@
 import argparse
-import learning.models.model as models
+
 import torch
-from torch.utils.data import DataLoader, TensorDataset
 import torch.nn as nn
+from torch.utils.data import DataLoader, TensorDataset
+
+import learning.models.model as models
 
 
 def get_args():
@@ -12,15 +14,17 @@ def get_args():
     parser.add_argument('--data_path', type=str, required=True)
     return parser.parse_args()
 
+
 def get_data_loader():
     from sklearn.datasets import make_regression
-    X,y = make_regression(10000, n_features=10, n_targets=1, n_informative=3)
+    X, y = make_regression(10000, n_features=10, n_targets=1, n_informative=3)
     X = torch.from_numpy(X)
     y = torch.from_numpy(y)
-    train_loader = DataLoader(TensorDataset(X,y), pin_memory=True, num_workers=2, batch_size=128)
-    test_loader  = DataLoader(TensorDataset(X,y), pin_memory=True, num_workers=2, batch_size=128)
+    train_loader = DataLoader(TensorDataset(X, y), pin_memory=True, num_workers=2, batch_size=128)
+    test_loader = DataLoader(TensorDataset(X, y), pin_memory=True, num_workers=2, batch_size=128)
 
     return train_loader, test_loader
+
 
 def main(args):
     print("learning stuff.")
