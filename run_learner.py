@@ -2,7 +2,6 @@ import argparse
 
 import torch
 import torch.nn as nn
-from mpi4py import MPI
 from torch.utils.data import DataLoader, TensorDataset
 
 import learning.models.model as models
@@ -32,6 +31,8 @@ def get_data_loader():
 
 def main(args):
     if args.mpi:
+        from mpi4py import MPI
+
         # comm = MPI.COMM_WORLD
         # size = comm.Get_size()
         # rank = comm.Get_rank()
