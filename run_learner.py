@@ -2,9 +2,11 @@ import argparse
 
 import torch
 import torch.nn as nn
+from mpi4py import MPI
 from torch.utils.data import DataLoader, TensorDataset
 
 import learning.models.model as models
+
 
 
 def get_args():
@@ -12,6 +14,8 @@ def get_args():
     parser.add_argument('-f', action='store_true')
     parser.add_argument('-o', type=str, required=True)
     parser.add_argument('--data_path', type=str, required=True)
+    parser.add_argument('--smiles_file', type=str, required=True)
+    parser.add_argument('--mpi', action='store_true')
     return parser.parse_args()
 
 
@@ -27,11 +31,16 @@ def get_data_loader():
 
 
 def main(args):
-    print("learning stuff.")
-    trainer = models.Trainer.create_new_trainer(models.TwoLayerNet, 10, nn.MSELoss, args.o)
-    train_loader, test_loader = get_data_loader()
-    if args.f:
-        trainer.train(train_loader, epochs=10)
+    if args.mpi:
+        comm = MPI.COMM_WORLD
+        size = comm.Get_size()
+        rank = comm.Get_rank()
+    else:
+        print("Single-user non-MPI mode.")
+        trainer = models.Trainer.create_new_trainer(models.TwoLayerNet, 10, nn.MSELoss, args.o)
+        train_loader, test_loader = get_data_loader()
+        if args.f:
+            trainer.train(train_loader, epochs=10)
 
 
 if __name__ == '__main__':

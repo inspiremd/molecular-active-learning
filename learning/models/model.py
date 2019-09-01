@@ -8,11 +8,13 @@ class TwoLayerNet(nn.Module):
     def __init__(self, feat_size):
         super(TwoLayerNet, self).__init__()
         self.ln1 = nn.Linear(feat_size, 100)
-        self.ln2 = nn.Linear(100, 1)
+        self.mu = nn.Linear(100, 1)
+        self.sigma = nn.Linear(100, 1)
         self.relu = nn.ReLU()
 
     def forward(self, x):
-        return self.ln2(self.relu(self.ln1(x)))
+        x = self.relu(self.ln1(x))
+        return self.mu(x), self.sigma(x)
 
 
 class Trainer():
@@ -45,6 +47,15 @@ class Trainer():
 
         return Trainer(model, optimizer, loss, config_dir)
 
+    def checkpont(self):
+        torch.save({
+            'model_state' : self.model.state_dict(),
+            'optimizer_state' : self.model.state_dict(),
+            'feats' : self.model.feat_size,
+            'loss_f' : self.loss
+        }, self.dir + "checkpoint.pt")
+
+
     def train_epoch(self, data_loader):
         for i, (x, y) in enumerate(data_loader):
             x = x.float().to(self.device)
@@ -58,4 +69,4 @@ class Trainer():
     def train(self, data_loader, epochs=10):
         for i in range(epochs):
             self.train_epoch(data_loader)
-        torch.save(self.model, self.dir + "checkpoint.pt")
+        self.checkpont()
