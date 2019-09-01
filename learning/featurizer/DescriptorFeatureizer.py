@@ -1,10 +1,12 @@
 from mordred import Calculator, descriptors
 
-
+"""
+trying this out??
+"""
 class DescriptorFeaturizer(object):
     def __init__(self, **kwargs):
         """
-        Featureizer for usign chemical descriptors
+        Featureizer for using chemical descriptors
         :param kwargs: keyword arugments for MOrdered Calculator
         """
         self.calc = Calculator(descriptors, **kwargs)

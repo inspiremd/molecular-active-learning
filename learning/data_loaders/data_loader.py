@@ -8,6 +8,11 @@ from learning.featurizer.DescriptorFeatureizer import DescriptorFeaturizer
 class GeneralMolDataset(Dataset):
 
     def __init__(self, csv_file, mol_featuerizer=DescriptorFeaturizer):
+        """
+        General Molecular Dataset
+        :param csv_file: single row, where the column headers are [Dock], [Minimize], and/or [MMGBSA]
+        :param mol_featuerizer: A learning.featureizer.Featureizer object
+        """
         self.data = pd.read_csv(csv_file)
         self.calc = mol_featuerizer(ignore_3D=False)
 
