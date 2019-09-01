@@ -19,5 +19,5 @@ After some learning stage
 
 For testing one can run:
 ```bash
- python run_learner.py -f -o tmp/ --data_path tmp/fake_data/
+python run_learner.py -f -o tmp/ --data_path tmp/fake_data/ --smiles_file sample_input.csv
 ```
