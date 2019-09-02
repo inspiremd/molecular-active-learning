@@ -101,8 +101,8 @@ def get_data_loader(df, smiles, features):
 
     df = pd.merge(df, features, on='name', how='inner')
     X = df.drop(['name', 'smile', 'property', 'value'], axis=1)
-    X = np.array(X.apply(lambda x : pd.to_numeric(x, errors='coerce'), axis=1)).astype(np.float32)
-    y = np.array(pd.to_numeric(df.value, errors='coerce')).astype(np.float32)
+    X = torch.from_numpy(np.array(X.apply(lambda x : pd.to_numeric(x, errors='coerce'), axis=1)).astype(np.float32))
+    y = torch.from_numpy(np.array(pd.to_numeric(df.value, errors='coerce')).astype(np.float32))
 
     train_loader = DataLoader(TensorDataset(X, y), pin_memory=True, num_workers=2, batch_size=128)
     test_loader = DataLoader(TensorDataset(X, y), pin_memory=True, num_workers=2, batch_size=128)
@@ -143,14 +143,12 @@ def main(args):
             smiles_loaded = list(set(df.smile.tolist()))
             feature_df = pd.read_csv(args.feature_df)
 
-
-            trn_data, test_data, train_loader, test_loader = get_data_loader(df, smiles_loaded, feature_df)
+            train_loader, test_loader = get_data_loader(df, smiles_loaded, feature_df)
 
             trainer = models.Trainer.create_new_trainer(models.TwoLayerNet, 10, nn.MSELoss, args.o)
-            train_loader, test_loader = get_data_loader()
             if args.f:
                 trainer.train(train_loader, epochs=10)
-            trainer.checkpont(file_prefix=str(len(trn_data)))
+            trainer.checkpont(file_prefix=str(df.shape[0]))
 
 
 if __name__ == '__main__':
