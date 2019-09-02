@@ -48,14 +48,16 @@ class Trainer():
 
         return Trainer(model, optimizer, loss, config_dir)
 
-    def checkpont(self):
+    def checkpont(self, file_prefix=None):
+        name = "checkpoint.pt"
+        if file_prefix is not None:
+            name = file_prefix + name
         torch.save({
             'model_state' : self.model.state_dict(),
             'optimizer_state' : self.model.state_dict(),
             'feats' : self.model.feat_size,
             'loss_f' : self.loss
-        }, self.dir + "checkpoint.pt")
-
+        }, self.dir + name)
 
     def train_epoch(self, data_loader):
         for i, (x, y) in enumerate(data_loader):
@@ -70,4 +72,3 @@ class Trainer():
     def train(self, data_loader, epochs=10):
         for i in range(epochs):
             self.train_epoch(data_loader)
-        self.checkpont()
