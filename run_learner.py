@@ -93,7 +93,7 @@ def get_args():
     parser.add_argument('--smiles_file', type=str, required=True)
     parser.add_argument('--mpi', action='store_true')
     parser.add_argument('--min_start', type=int, required=False, default=50000)
-    parser.add_argument('--feature_df', type=int, required=True)
+    parser.add_argument('--feature_df', type=str, required=True)
     return parser.parse_args()
 
 
